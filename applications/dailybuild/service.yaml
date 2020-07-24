@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: repo-service
+  annotations:
+    kubernetes.io/elb.class: union
+    kubernetes.io/elb.id: 90341c75-8c0c-4f40-9eef-34c160903eef
+    kubernetes.io/elb.lb-algorithm: ROUND_ROBIN
+spec:
+  loadBalancerIP: 114.116.250.191
+  externalTrafficPolicy: Cluster
