@@ -9,3 +9,9 @@ metadata:
 spec:
   loadBalancerIP: 114.116.250.191
   externalTrafficPolicy: Cluster
+  ports:
+    - name: rsync-ssh-server-port
+      port: 22
+      targetPort: 22
+      # used to be visitable via nodeport
+      nodePort: 30322
