@@ -11,7 +11,9 @@ spec:
     - name: http
       port: 80
       targetPort: 8080
-  loadBalancerSourceRanges:
+    - name: tunnel
+      port: 50000
+      targetPort: 50000
   loadBalancerIP: 121.36.66.79
 ---
 apiVersion: v1
