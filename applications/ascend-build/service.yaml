@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: repo-service
+  annotations:
+    kubernetes.io/elb.class: union
+    kubernetes.io/elb.id: c5e74ce2-35a0-460f-abc5-0f74925afc0c
+    kubernetes.io/elb.lb-algorithm: ROUND_ROBIN
+spec:
+  loadBalancerIP: 121.36.71.102
+  externalTrafficPolicy: Cluster
+  ports:
+    - name: rsync-ssh-server-port
+      port: 22
+      targetPort: 22
+      # used to be visitable via nodeport
+      nodePort: 30324
