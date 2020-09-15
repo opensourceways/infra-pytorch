@@ -3,6 +3,7 @@ resources:
   - secrets.yaml
   - namespace.yaml
   - ingress.yaml
+  - ingress-huawei.yaml
 commonLabels:
   app: openeuler-jenkins
 patchesStrategicMerge:
