@@ -3,7 +3,7 @@ kind: Ingress
 metadata:
   annotations:
     kubernetes.io/ingress.class: nginx
-  name: jenkins-ingress
+  name: jenkins-ingress-huawei
 spec:
   tls:
     - hosts:
