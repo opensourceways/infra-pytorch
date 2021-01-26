@@ -54,4 +54,4 @@ spec:
             secretName: rsync-secrets
         - name: data-volume
           persistentVolumeClaim:
-            claimName: ascend-data-volume
+            claimName: cce-evs-import-ascend-data-volume

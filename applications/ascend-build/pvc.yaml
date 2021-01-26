@@ -2,11 +2,11 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: ascend-data-volume
+  name: cce-evs-import-ascend-data-volume
 spec:
   accessModes:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2000Gi
+      storage: 20000Gi
   storageClassName: csi-disk
