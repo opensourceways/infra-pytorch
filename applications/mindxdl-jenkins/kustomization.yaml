@@ -3,7 +3,7 @@ resources:
   - secrets.yaml
   - namespace.yaml
 commonLabels:
-  app: mindXDL-jenkins
+  app: mindxdl-jenkins
 patchesStrategicMerge:
   - pvc.yaml
   - deployment.yaml
@@ -15,4 +15,4 @@ patchesJson6902:
       kind: Service
       name: jenkins
     path: selector.yaml
-namespace: mindXDL-jenkins
+namespace: mindxdl-jenkins
