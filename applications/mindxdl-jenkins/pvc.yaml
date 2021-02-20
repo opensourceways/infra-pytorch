@@ -5,7 +5,7 @@ metadata:
   name: jenkins
 spec:
   accessModes:
-    - ReadWriteMany
+    - ReadWriteOnce
   storageClassName: csi-disk
   resources:
     requests:
