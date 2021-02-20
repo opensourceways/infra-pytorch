@@ -27,7 +27,7 @@ spec:
               memory: 32000Mi
             requests:
               cpu: 6000m
-              memory: 16000Mi
+              memory: 12000Mi
       initContainers:
         - name: copy-default-config
           env:
