@@ -6,7 +6,7 @@ metadata:
 spec:
   accessModes:
     - ReadWriteOnce
-  storageClassName: sas
+  storageClassName: csi-disk
   resources:
     requests:
-      storage: 500Gi
+      storage: 100Gi

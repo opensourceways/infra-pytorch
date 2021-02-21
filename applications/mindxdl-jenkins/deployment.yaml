@@ -45,3 +45,7 @@ spec:
                 secretKeyRef:
                   key: jenkins-admin-user
                   name: pytorch-jenkins
+      volumes:
+        - name: jenkins-home
+          persistentVolumeClaim:
+            claimName: cce-evs-mindxdl-jenkins
