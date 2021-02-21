@@ -4,7 +4,7 @@ metadata:
   name: jenkins
   annotations:
     kubernetes.io/elb.class: union
-    kubernetes.io/elb.id: 982ff9ba-bd24-4a57-a591-4db6554bee5d
+    kubernetes.io/elb.id: 2a13a45c-a250-4547-b837-3955f6a69911
     kubernetes.io/elb.lb-algorithm: ROUND_ROBIN
 spec:
   externalTrafficPolicy: Local
