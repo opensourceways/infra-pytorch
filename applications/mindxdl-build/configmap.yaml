@@ -1,0 +1,98 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: repo-configmap
+data:
+  rsyncd.conf: |
+    log file = /dev/stdout
+    use chroot = yes
+    uid = root
+    gid = root
+    max connections = 10
+    timeout = 600
+    read only = yes
+
+    [mindxdl]
+            path = /repo/mindxdl
+            comment = mindxdl repo folder
+            read only = true
+            auth users = root
+            secrets file = /etc/rsyncd.secrets
+            ignore nonreadable = yes
+            refuse options = checksum
+            dont compress = *
+  ssh.pub: |
+    ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAAAgQDISN8RQzVjMypL0nGiZOoIWOpGGKwqzcnB241PpBt3vpBFr6TDFRWd41cIZzyhmTKPtMtlKl/sptXikllXwEwPR/24K9QeDod20Xxjbj90l4Y5b1RXzt1wxTgF0j5rUHKVJfOyn/rBkn0V7Rv8vAt1SY+Sjp3VoZoyAJCAGH2VSQ== root@local
+  default.conf: |
+    server {
+        listen 80;
+
+        if ($time_iso8601 ~ "^(\d{4})-(\d{2})-(\d{2})") {
+               set $year $1;
+               set $month $2;
+               set $day $3;
+        }
+        access_log /var/log/nginx/access.log.$year$month$day main;
+
+        server_name repo.mindxdl.org;
+        location / {
+            root   /repo/mindxdl;
+            fancyindex on;
+            fancyindex_exact_size off;
+            fancyindex_localtime on;
+            autoindex   on;
+        }
+        location = /favicon.ico {
+          log_not_found off;
+          access_log off;
+        }
+    }
+  nginx.conf: |-
+    user  root;
+    worker_processes  auto;
+
+    error_log  /var/log/nginx/error.log warn;
+    pid        /var/run/nginx.pid;
+
+
+    events {
+        worker_connections  1024;
+    }
+
+
+    http {
+        include       /etc/nginx/conf/mime.types;
+        default_type  application/octet-stream;
+
+        # used for geoip2
+        geoip2 /etc/nginx/geoip/country/GeoLite2-Country.mmdb {
+            $geoip2_metadata_country_build metadata build_epoch;
+            $geoip2_data_country_code default=US source=$remote_addr country iso_code;
+            $geoip2_data_country_name country names en;
+        }
+
+        geoip2 /etc/nginx/geoip/city/GeoLite2-City.mmdb {
+            $geoip2_data_city_name default=ShenZhen city names en;
+            $geoip2_data_location_latitude location latitude;
+            $geoip2_data_location_longitude location longitude;
+        }
+
+        # the cidr used for elb cluster
+        set_real_ip_from 100.125.0.0/16;
+        real_ip_recursive on;
+        real_ip_header X-Forwarded-For;
+
+        log_format  main  '$remote_addr <$geoip2_data_country_code, $geoip2_data_country_name, $geoip2_data_city_name, $geoip2_data_location_latitude, $geoip2_data_location_longitude> '
+                          '[$time_local] "$request" $status $body_bytes_sent "$http_referer" '
+                          '"$http_user_agent" $request_filename';
+
+        sendfile        on;
+        tcp_nopush      on;
+
+        keepalive_timeout  65;
+
+        #gzip  on;
+
+        include /etc/nginx/conf/conf.d/*.conf;
+    }
