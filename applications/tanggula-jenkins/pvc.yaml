@@ -1,0 +1,24 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: tanggula-jenkins-pvc
+  namespace: tanggula-jenkins
+  annotations:
+    everest.io/disk-volume-type: SAS
+  labels:
+    failure-domain.beta.kubernetes.io/region: cn-east-3
+    failure-domain.beta.kubernetes.io/zone: cn-east-3a
+    "app.kubernetes.io/name": 'jenkins'
+    "helm.sh/chart": "jenkins-1.7.4"
+    "app.kubernetes.io/managed-by": "Tiller"
+    "app.kubernetes.io/instance": "jenkins"
+    "app.kubernetes.io/component": "jenkins-master"
+spec:
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: csi-disk
+  resources:
+    requests:
+      storage: 500Gi
