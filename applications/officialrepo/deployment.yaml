@@ -34,7 +34,6 @@ spec:
             - -c
             - |
               mkdir -p /repo/pytorch
-              /etc/init.d/ssh start
               exec nginx -g "daemon off;"
         - name: rsync-server
           volumeMounts:
