@@ -1,0 +1,120 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: centos-x86-slaves-service
+  namespace: tanggula-jenkins
+  labels:
+    slave: centos-x86-slave
+spec:
+  ports:
+    - port: 80
+      name: port-placeholder
+  clusterIP: None
+  selector:
+    slave: centos-x86-slave
+---
+kind: StatefulSet
+apiVersion: apps/v1
+metadata:
+  name: centos-x86-slave
+  namespace: tanggula-jenkins
+  labels: 
+    slave: centos-x86-slave
+spec:
+  serviceName: "centos-x86-slaves-service"
+  replicas: 1
+  selector:
+    matchLabels: 
+      slave: centos-x86-slave
+  template:
+    metadata:
+      labels:
+        slave: centos-x86-slave
+    spec:
+      initContainers:
+        - name: slave-init
+          image: swr.cn-north-4.myhuaweicloud.com/mindspore/jenkins-slave-tools:0.0.1
+          volumeMounts:
+            - mountPath: /home/jenkins/share-config
+              name: jenkins-share-config
+          env:
+            - name: JENKINS_NODE_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: JENKINS_USER_NAME
+              value: admin
+            - name: JENKINS_USER_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: jenkins-secret
+                  key: password
+            - name: JENKINS_AGENT_WORKDIR
+              value: /home/jenkins/agent-working-dir
+            - name: JENKINS_URL
+              value: http://jenkins.tanggula-jenkins.svc.cluster.local
+            - name: JENKINS_SHARE_FOLDER
+              value: /home/jenkins/share-config
+            - name: EXECUTOR_NUMBERS
+              value: "1"
+            - name: NODE_LABELS
+              value: x86 centos-x86
+          args: ["$(JENKINS_URL)", "$(JENKINS_USER_NAME)", "$(JENKINS_USER_PASSWORD)", "$(JENKINS_NODE_NAME)", "$(EXECUTOR_NUMBERS)", "$(JENKINS_AGENT_WORKDIR)", "$(NODE_LABELS)", "$(JENKINS_SHARE_FOLDER)"]
+      containers:
+        - name: jenkins-slave
+          image: swr.ap-southeast-1.myhuaweicloud.com/opensourceway/tanggula-slave-centos-x86:v0.0.1
+          imagePullPolicy: "IfNotPresent"
+          volumeMounts:
+            - mountPath: /home/jenkins/share-config
+              name: jenkins-share-config
+            - mountPath: /home/jenkins/share-data
+              name: jenkins-share-data
+          command:
+            - /bin/bash
+            - -c
+            - |
+              export JENKINS_SECRET=`cat /home/jenkins/share-config/node_secret.id`;
+              exec jenkins-agent
+          resources:
+            requests:
+              cpu: 6000m
+              memory: 8000Mi
+            limits:
+              cpu: 8000m
+              memory: 18000Mi
+          env:
+            - name: JENKINS_TUNNEL
+              value: jenkins.tanggula-jenkins.svc.cluster.local:50000
+            - name: JENKINS_AGENT_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: JENKINS_AGENT_WORKDIR
+              value: /home/jenkins/agent-working-dir
+            - name: JENKINS_URL
+              value: http://jenkins.tanggula-jenkins.svc.cluster.local
+      volumes:
+        - name: jenkins-share-config
+          emptyDir: {}
+        - name: jenkins-share-data
+          persistentVolumeClaim:
+            claimName: cce-efs-import-tangguala-jenkins
+  updateStrategy:
+    type: RollingUpdate
+  volumeClaimTemplates:
+    - metadata:
+        name: centos-x86-slave-pvc
+        namespace: tanggula-jenkins
+        annotations:
+          everest.io/disk-volume-type: SAS
+        labels:
+          failure-domain.beta.kubernetes.io/region: "cn-east-3"
+          failure-domain.beta.kubernetes.io/zone: "cn-east-3a"
+      spec:
+        accessModes:
+        - ReadWriteOnce
+        resources:
+          requests:
+            storage: 100Gi
+        storageClassName: "csi-disk"

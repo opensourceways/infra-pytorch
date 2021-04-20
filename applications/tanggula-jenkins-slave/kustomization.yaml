@@ -1,0 +1,6 @@
+resources:
+- tanggula-slave-centos-x86.yaml
+- secrets.yaml
+namespace: tanggula-jenkins
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
