@@ -4,3 +4,7 @@ resources:
 namespace: tanggula-jenkins
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+images:
+- name: swr.ap-southeast-1.myhuaweicloud.com/opensourceway/tanggula-slave-centos-x86
+  newName: swr.ap-southeast-1.myhuaweicloud.com/opensourceway/tanggula-slave-centos-x86
+  newTag: d42e47a7b49fb8aae1d60f8e068231d0a53d83bb
