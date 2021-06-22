@@ -5,6 +5,9 @@ resources:
   - secrets.yaml
 commonLabels:
   app: ascend-dailybuild-repo
+commonAnnotations:
+  owner: tommylikehu
+  email: "tommylikehu@gmail.com"
 patchesStrategicMerge:
   - configmap.yaml
   - deployment.yaml
