@@ -4,6 +4,9 @@ resources:
   - secrets.yaml
 commonLabels:
   app: mindxdle-repo
+commonAnnotations:
+  owner: tommylikehu
+  email: "tommylikehu@gmail.com"
 patchesStrategicMerge:
   - configmap.yaml
   - deployment.yaml

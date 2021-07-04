@@ -6,6 +6,9 @@ resources:
   - deployment.yaml
 commonLabels:
   app: tanggula-jenkins
+commonAnnotations:
+  owner: tommylikehu
+  email: "tommylikehu@gmail.com"
 patchesStrategicMerge:
   - remove.yaml
   - service.yaml

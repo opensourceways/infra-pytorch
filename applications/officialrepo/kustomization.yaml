@@ -5,6 +5,9 @@ resources:
   - secrets.yaml
 commonLabels:
   app: pytorch-official-repo
+commonAnnotations:
+  owner: tommylikehu
+  email: "tommylikehu@gmail.com"
 patchesStrategicMerge:
   - configmap.yaml
   - deployment.yaml

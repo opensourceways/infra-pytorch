@@ -4,6 +4,9 @@ resources:
   - namespace.yaml
 commonLabels:
   app: mindxdl-jenkins
+commonAnnotations:
+  owner: tommylikehu
+  email: "tommylikehu@gmail.com"
 patchesStrategicMerge:
   - pvc.yaml
   - deployment.yaml

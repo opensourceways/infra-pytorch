@@ -28,12 +28,14 @@ spec:
       annotations:
         checksum/config: 7125987d703247e800c91cc5b05b6a04195a4ea8a804ac62fc2618c34108b2f0
     spec:
+      imagePullSecrets:
+        - name: huawei-swr-image-pull-secret
       securityContext:
         runAsUser: 0
       serviceAccountName: "jenkins"
       containers:
         - name: jenkins
-          image: "jenkins/jenkins:lts"
+          image: swr.cn-north-4.myhuaweicloud.com/opensourceway/common/jenkins:lts
           imagePullPolicy: "Always"
           args: [ "--argumentsRealm.passwd.$(ADMIN_USER)=$(ADMIN_PASSWORD)",  "--argumentsRealm.roles.$(ADMIN_USER)=admin"]
           env:
@@ -100,7 +102,7 @@ spec:
               readOnly: false
       initContainers:
         - name: copy-default-config
-          image: "jenkins/jenkins:lts"
+          image: swr.cn-north-4.myhuaweicloud.com/opensourceway/common/jenkins:lts
           imagePullPolicy: "Always"
           command: [ "sh", "/var/jenkins_config/apply_config.sh" ]
           env:

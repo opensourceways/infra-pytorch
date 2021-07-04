@@ -2,4 +2,7 @@ resources:
   - check-slaves.yaml
   - secrets.yaml
   - namespace.yaml
+commonAnnotations:
+  owner: tommylikehu
+  email: "tommylikehu@gmail.com"
 namespace: jenkins-slave
